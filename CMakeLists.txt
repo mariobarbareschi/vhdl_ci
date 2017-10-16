@@ -13,14 +13,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#To make everything working, just add macros specified in the vhdl_macros.cmake file
+include(macro/vhdl_macros.cmake)
+
 #Give a name to the project
-project(ghdl_ci)
+#Actually, the language could not be VHDL since there is no a compiler environment for that language
+#Better to say NONE instead of annoying VHDL
+project(ghdl_ci NONE)
 
 #This project requires at least cmake 3.0
 cmake_minimum_required(VERSION 3.0)
-
-#To make everything working, just add macros specified in the vhdl_macros.cmake file
-include(macro/vhdl_macros.cmake)
 
 #Let cmake enables the ctest environment, then specify that the command runtest effectively runs ctest
 enable_testing()
@@ -29,11 +31,11 @@ add_custom_target(runtest COMMAND ${CMAKE_CTEST_COMMAND} --verbose --build-run-d
 #############
 
 # Getting access to all VHDL sources
-add_subdirectory(src)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 # Retrieve Testbenches as well
-add_subdirectory(testbench)
+add_subdirectory(${CMAKE_SOURCE_DIR}/testbench)
 
-add_custom_target(list ALL COMMAND ghdl -d)
+add_custom_target(list ALL COMMAND ${CMAKE_VHDL_COMPILER} -d DEPENDS ${VHDL_MODULE} ${VHDL_TEST_MODULE})
 set(CTEST_OUTPUT_ON_FAILURE 1)
 
 

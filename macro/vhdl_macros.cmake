@@ -13,6 +13,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+set(CMAKE_VHDL_COMPILER_ENV_VAR ghdl)
+set(CMAKE_VHDL_COMPILER /usr/local/bin/ghdl)
+
 # CMAKE macro for add_vhdl_source macro
 macro (add_vhdl_source)
     file (RELATIVE_PATH _path "${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -22,21 +25,12 @@ macro (add_vhdl_source)
         else()
            set(FILE_SRC "${_src_n}")
         endif()
-        message("-- Found VHDL Source: ${CMAKE_SOURCE_DIR}/${FILE_SRC}")
-        add_custom_target("${ARGV1}" COMMAND ghdl -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}" WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        message(STATUS "Found VHDL Source: ${FILE_SRC}")
+        add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER} -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}" WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        list (APPEND VHDL_MODULE "${ARGV1}")
     endforeach()
+        set (VHDL_MODULE ${VHDL_MODULE}  CACHE INTERNAL "" FORCE)
 endmacro()
-
-# CMAKE macro for add_vhdl_path macro
-macro (add_vhdl_path)
-  file (RELATIVE_PATH _path "${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
-  foreach (_src_cmake ${ARGN})
-  	   message("-- Adding VHDL Source Directory: ${CMAKE_SOURCE_DIR}/${_src_cmake}")
-      add_subdirectory(${_src_cmake})
-      # propagate SRCS to parent directory
-  endforeach()
-endmacro()
-
 
 # CMAKE macro for add_testbench_source macro
 macro (add_testbench_source)
@@ -55,23 +49,17 @@ macro (add_testbench_source)
         file(MAKE_DIRECTORY ${TRACE_PATH})
         set(TRACE_PATH "${TRACE_PATH}/${TEST_NAME}.vcd")
 
-        add_custom_target("${TEST_NAME}" COMMAND ghdl -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}" WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-        add_custom_target("${ARGV1}" COMMAND ghdl -r ${ENTITY_NAME} --vcd=${TRACE_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${TEST_NAME}")
+        add_custom_target("${TEST_NAME}" COMMAND ${CMAKE_VHDL_COMPILER} -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}" WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER}  -r ${ENTITY_NAME} --vcd=${TRACE_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${TEST_NAME}")
         add_custom_target("sim_${ARGV1}" COMMAND gtkwave ${TRACE_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${ARGV1}")
-        add_test(NAME "${ARGV1}" COMMAND ghdl -r "${ENTITY_NAME}" --assert-level=error WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        
+        add_test(NAME "${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER}  -r "${ENTITY_NAME}" --assert-level=error WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        list (APPEND VHDL_TEST_MODULE "${ARGV1}")
 
         add_dependencies(runtest "${ARGV1}")
 
-        message("-- Adding VHDL Test: ${CMAKE_SOURCE_DIR}/${FILE_SRC}")
+        message(STATUS "Adding VHDL Test: ${FILE_SRC}")
     endforeach()
-endmacro()
-
-# CMAKE macro for add_testbench_path macro
-macro (add_testbench_path)
-  file (RELATIVE_PATH _path "${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
-  foreach (_src ${ARGN})
-      message("-- Adding VHDL Test Directory: ${CMAKE_SOURCE_DIR}/${_src_cmake}")
-      add_subdirectory(${_src})
-  endforeach()
+    set (VHDL_TEST_MODULE ${VHDL_TEST_MODULE}  CACHE INTERNAL "" FORCE)
 endmacro()
 
