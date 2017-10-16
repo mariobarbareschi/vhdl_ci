@@ -49,7 +49,7 @@ uut: mux4_1 port map(
         wait for 10 ns;
 		SEL <= "11";
         wait for 10 ns;
-        assert (X = '1') report "X should be 1" severity error;
+        assert (X = '0') report "X should be 1" severity error;
         A <= x"0";
         wait for 10 ns;
 		wait;
