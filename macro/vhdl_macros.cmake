@@ -26,7 +26,7 @@ macro (add_vhdl_source)
            set(FILE_SRC "${_src_n}")
         endif()
         message(STATUS "Found VHDL Source: ${FILE_SRC}")
-        add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER} -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}")
+        add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER} -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}" WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
         list (APPEND VHDL_MODULE "${ARGV1}")
     endforeach()
         set (VHDL_MODULE ${VHDL_MODULE}  CACHE INTERNAL "" FORCE)
@@ -49,7 +49,8 @@ macro (add_testbench_source)
         file(MAKE_DIRECTORY ${TRACE_PATH})
         set(TRACE_PATH "${TRACE_PATH}/${TEST_NAME}.vcd")
 
-        add_custom_target("${TEST_NAME}" COMMAND ${CMAKE_VHDL_COMPILER} -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}" && ${CMAKE_VHDL_COMPILER} -e ${ENTITY_NAME} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        add_custom_target("${TEST_NAME}" COMMAND ${CMAKE_VHDL_COMPILER} -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}" &&
+                                                 ${CMAKE_VHDL_COMPILER} -e "${ENTITY_NAME}"    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
         add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER}  -r ${ENTITY_NAME} --vcd=${TRACE_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${TEST_NAME}")
         add_custom_target("sim_${ARGV1}" COMMAND gtkwave ${TRACE_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${ARGV1}")
         

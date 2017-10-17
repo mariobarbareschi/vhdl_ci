@@ -14,5 +14,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 add_testbench_source(mux4_1_testbench.vhd mux4_1_testbench)
-add_dependencies(mux4_1_testbench mux4_1)
+add_dependencies(mux4_1_testbench mux4_1 mux2_1)
 
