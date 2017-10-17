@@ -21,8 +21,21 @@ include(macro/vhdl_macros.cmake)
 #Better to say NONE instead of annoying VHDL
 project(ghdl_ci NONE)
 
-#This project requires at least cmake 3.0
-cmake_minimum_required(VERSION 3.0)
+#This project requires at least cmake 3.3
+cmake_minimum_required(VERSION 3.3)
+
+execute_process(COMMAND ghdl -v OUTPUT_VARIABLE GHDL_VERSION_STRING)
+if($GHDL_VERSION_STRING STREQUAL "")
+    message(FATAL_ERROR "GHDL not found")
+else()
+    message(STATUS "Found ${GHDL_VERSION_STRING}")
+endif()
+execute_process(COMMAND gtkwave --version OUTPUT_VARIABLE GTKWAVE_VERSION_STRING)
+if($GTKWAVE_VERSION_STRING STREQUAL "")
+    message(FATAL_ERROR "GTKWAVE not found")
+else()
+    message(STATUS "Found ${GTKWAVE_VERSION_STRING}")
+endif()
 
 #Let cmake enables the ctest environment, then specify that the command runtest effectively runs ctest
 enable_testing()
