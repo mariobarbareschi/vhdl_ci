@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(CMAKE_VHDL_COMPILER_ENV_VAR ghdl)
-set(CMAKE_VHDL_COMPILER /usr/local/bin/ghdl)
+set(CMAKE_VHDL_COMPILER ghdl)
 
 # CMAKE macro for add_vhdl_source macro
 macro (add_vhdl_source)
