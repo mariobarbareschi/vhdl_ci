@@ -49,16 +49,30 @@ $ make runtest
 Even though the [CMake] project is based on [CTest], running make test will fail, since it does not support dependencies. Instead, run make all test.
 
 ## Automatic Compilation
-**Coming soon**
+In order to directly support the continuous integration, this project provides you a [Docker image] with all you need for testing your VHDL code. Indeed, the demo of this repository is automatically executed, namely tested, through [Travis-CI].
+By your own, having available [Docker], just type:
+```sh
+$ git clone https://github.com/mariobarbareschi/vhdl_ci.git
+$ docker build -t vhdl_ci .
+$ docker run vhdl_ci /bin/bash -c "mkdir /opt/build && cd /opt/build && cmake .. && make all test"
+```
+If you want to skip the docker image build, just pull it from the [Docker hub]:
 
+```sh
+$ docker pull mariobarbareschi/vhdl_ci
+```
 --------
 ### LICENSE ###
 
 
-* [GPLV3.0](https://www.gnu.org/licenses/licenses.html)
+* [aGPLV3.0](https://www.gnu.org/licenses/agpl.html)
 ----------
 ### Contributing ###
 Github is for social coding: if you want to write code, I encourage contributions through pull requests from forks of this repository.
 
    [CMake]: <https://cmake.org>
    [CTest]: <https://cmake.org/Wiki/CMake/Testing_With_CTest>
+   [Travis-CI]: <https://travis-ci.org/mariobarbareschi/vhdl_ci>
+   [Docker]: <https://hub.docker.com/r/mariobarbareschi/vhdl_ci>
+   [Docker image]: <https://hub.docker.com/r/mariobarbareschi/vhdl_ci>
+   [Docker hub]: <https://hub.docker.com/>
