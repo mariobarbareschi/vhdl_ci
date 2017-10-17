@@ -13,10 +13,12 @@ This repo provides you two [CMake] macros and some other stuff for managing VHDL
 
 ## Create you first project
 Clearly, your VHDL project is made of entities, packages, functions, testbenches, and so on. You have available two [CMake] macros:
+
 | CMake Macros | Description |
 | ------ | ------ |
 | add_vhdl_source(<file> <entity_tag>) | add <file> with the symbolic name <entity_tag>|
 | add_testbench_source(<file> <test_tag>) | add testbench <file> with the symbolic name <test_tag> |
+
 Tags are actually used for giving dependencies among entities and testbenches
 ```cmake
 add_testbench_source(adder_testbench.vhd test_add)
