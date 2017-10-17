@@ -1,0 +1,9 @@
+sudo: required
+language: C
+services:
+- docker
+before_install:
+- docker info
+- docker build -t mariobarbareschi/vhdl_ci .
+script:
+- docker run mariobarbareschi/vhdl_ci /bin/bash -c "mkdir /opt/build && cd /opt/build && cmake .. && make all test"
