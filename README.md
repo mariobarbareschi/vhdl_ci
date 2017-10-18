@@ -1,6 +1,6 @@
 [![](https://images.microbadger.com/badges/image/mariobarbareschi/vhdl_ci.svg)](https://microbadger.com/images/mariobarbareschi/vhdl_ci "Get your own image badge on microbadger.com")[![Build Status](https://travis-ci.org/mariobarbareschi/vhdl_ci.svg?branch=master)](https://travis-ci.org/mariobarbareschi/vhdl_ci)
 # vhdl_ci
-This repository contains a minimal configuration for getting started with the Continuous Integration for the VHDL language, by involving the GHDL compiler
+This repository contains a minimal configuration for getting started with the Continuous Integration for the VHDL language, by involving the [GHDL] compiler.
 
 --------
 ## Prerequisites
@@ -9,7 +9,7 @@ To compile and simulate VHDL projects, you need to install the following tools:
   - ghdl
   - gtkwave (optional)
 
-This repo provides you two [CMake] macros and some other stuff for managing VHDL entities and testbenches
+This repo provides you two [CMake] macros and some other stuff for managing VHDL entities and testbenches.
 
 ## Create you first project
 Clearly, your VHDL project is made of entities, packages, functions, testbenches, and so on. You have available two [CMake] macros:
@@ -41,12 +41,15 @@ $ make mux2_1
 $ make mux2_1_testbench
 $ make mux4_1
 $ make mux4_1_testbench
-$ make runtest
+$ make test
 $ make sim_mux2_1_testbench
 $ make sim_mux4_1_testbench
 $ make runtest
 ```
 Even though the [CMake] project is based on [CTest], running make test will fail, since it does not support dependencies. Instead, run make all test.
+[GHDL] will be invoked by jobs named like a entities. In particolar, running jobs *testbench.\** causes a [GHDL] running over them, producing VCD files inside the *trace* folder, while, by default, [GTKWave] will be invoked as *\*.vcd* file viewer each time a job *sim_\** is actually executed.
+If you need to change the way [GTKWave] is ran or even the VCD viewer, define inside your CMakeLists.txt file a variable *VCD_VIEWER* that specifies the executable you want. For instance, if you are a MacOS user and you installed [GTKWave] as a system application, define *VCD_VIEWER* as follows:
+    set(VCD_VIEWER open -a gtkwave)
 
 ## Automatic Compilation
 In order to directly support the continuous integration, this project provides you a [Docker image] with all you need for testing your VHDL code. Indeed, the demo of this repository is automatically executed, namely tested, through [Travis-CI].
@@ -76,3 +79,5 @@ Github is for social coding: if you want to write code, I encourage contribution
    [Docker]: <https://hub.docker.com/r/mariobarbareschi/vhdl_ci>
    [Docker image]: <https://hub.docker.com/r/mariobarbareschi/vhdl_ci>
    [Docker hub]: <https://hub.docker.com/>
+   [GHDL]: <http://ghdl.free.fr>
+   [GTKWave]: <http://gtkwave.sourceforge.net>
