@@ -47,7 +47,7 @@ $ make sim_mux4_1_testbench
 $ make runtest
 ```
 Even though the [CMake] project is based on [CTest], running make test will fail, since it does not support dependencies. Instead, run make all test.
-[GHDL] will be invoked by jobs named like a entities. In particolar, running jobs *testbench.\** causes a [GHDL] running over them, producing VCD files inside the *trace* folder, while, by default, [GTKWave] will be invoked as *\*.vcd* file viewer each time a job *sim_\** is actually executed.
+[GHDL] will be invoked by jobs named like a entities. In particolar, running jobs "*testbench.\**" causes a [GHDL] running over them, producing VCD files inside the *trace* folder, while, by default, [GTKWave] will be invoked as "*\*.vcd*" file viewer each time a job "*sim_\**" is actually executed.
 If you need to change the way [GTKWave] is ran or even the VCD viewer, define inside your CMakeLists.txt file a variable *VCD_VIEWER* that specifies the executable you want. For instance, if you are a MacOS user and you installed [GTKWave] as a system application, define *VCD_VIEWER* as follows:
     set(VCD_VIEWER open -a gtkwave)
 
