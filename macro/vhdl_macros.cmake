@@ -15,7 +15,12 @@
 
 set(CMAKE_VHDL_COMPILER_ENV_VAR ghdl)
 set(CMAKE_VHDL_COMPILER ghdl)
-
+if(VCD_VIEWER)
+	set(VCD_VIEWER_COMMAND ${VCD_VIEWER})
+else()
+	set(VCD_VIEWER_COMMAND gtkwave)
+	message(STATUS "VCD_VIEWER variable is not set. By default, gtkWave will be invoked")
+endif()
 # CMAKE macro for add_vhdl_source macro
 macro (add_vhdl_source)
     file (RELATIVE_PATH _path "${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -52,7 +57,8 @@ macro (add_testbench_source)
         add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER} -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}" &&
                                                  ${CMAKE_VHDL_COMPILER} -e "${ENTITY_NAME}"    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
         add_custom_target("${TEST_NAME}" COMMAND ${CMAKE_VHDL_COMPILER}  -r ${ENTITY_NAME} --vcd=${TRACE_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${ARGV1}")
-        add_custom_target("sim_${ARGV1}" COMMAND gtkwave ${TRACE_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${TEST_NAME}")
+
+	add_custom_target("sim_${ARGV1}" COMMAND ${VCD_VIEWER_COMMAND} ${TRACE_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${TEST_NAME}")
         
         add_test(NAME "${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER}  -r "${ENTITY_NAME}" --assert-level=error WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
         list (APPEND VHDL_TEST_MODULE "${ARGV1}")

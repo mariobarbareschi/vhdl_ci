@@ -13,6 +13,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#Uncomment and customize the following command whenever gtkwave is not your default command to watch
+#the VCD simulation file.
+
+#set(VCD_VIEWER gtkwave)
+
 #To make everything working, just add macros specified in the vhdl_macros.cmake file
 include(macro/vhdl_macros.cmake)
 
