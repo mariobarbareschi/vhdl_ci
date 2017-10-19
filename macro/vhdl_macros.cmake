@@ -21,6 +21,8 @@ else()
 	set(VCD_VIEWER_COMMAND gtkwave)
 	message(STATUS "VCD_VIEWER variable is not set. By default, gtkWave will be invoked")
 endif()
+
+
 # CMAKE macro for add_vhdl_source macro
 macro (add_vhdl_source)
     file (RELATIVE_PATH _path "${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -31,8 +33,24 @@ macro (add_vhdl_source)
            set(FILE_SRC "${_src_n}")
         endif()
         message(STATUS "Found VHDL Source: ${FILE_SRC}")
-        add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER} -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}" WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER} -a  -v "${CMAKE_SOURCE_DIR}/${FILE_SRC}" WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
         list (APPEND VHDL_MODULE "${ARGV1}")
+    endforeach()
+        set (VHDL_MODULE ${VHDL_MODULE}  CACHE INTERNAL "" FORCE)
+endmacro()
+
+# CMAKE macro for add_vhdl_library macro
+macro (add_vhdl_library)
+ file (RELATIVE_PATH _path "${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
+    foreach (_src_n ${ARGV0})
+        if (_path)
+           set(FILE_SRC "${_path}/${_src_n}")
+        else()
+           set(FILE_SRC "${_src_n}")
+        endif()
+        message(STATUS "Found VHDL Source: ${FILE_SRC}")
+        add_custom_target("${ARGV2}" COMMAND ${CMAKE_VHDL_COMPILER} -a -v --work=${ARGV1} "${CMAKE_SOURCE_DIR}/${FILE_SRC}" WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        list (APPEND VHDL_MODULE "${ARGV2}")
     endforeach()
         set (VHDL_MODULE ${VHDL_MODULE}  CACHE INTERNAL "" FORCE)
 endmacro()
@@ -52,15 +70,16 @@ macro (add_testbench_source)
         string(REGEX REPLACE ".vhd" "" ENTITY_NAME "${_src}")
         set(TRACE_PATH "${CMAKE_BINARY_DIR}/trace")
         file(MAKE_DIRECTORY ${TRACE_PATH})
-        set(TRACE_PATH "${TRACE_PATH}/${TEST_NAME}.vcd")
+        set(TRACE_VCD_PATH "${TRACE_PATH}/${TEST_NAME}.vcd")
+        set(TRACE_FST_PATH "${TRACE_PATH}/${TEST_NAME}.fst")
 
-        add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER} -a "${CMAKE_SOURCE_DIR}/${FILE_SRC}" &&
-                                                 ${CMAKE_VHDL_COMPILER} -e "${ENTITY_NAME}"    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-        add_custom_target("${TEST_NAME}" COMMAND ${CMAKE_VHDL_COMPILER}  -r ${ENTITY_NAME} --vcd=${TRACE_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${ARGV1}")
+        add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER} -a -v "${CMAKE_SOURCE_DIR}/${FILE_SRC}" &&
+                                                 ${CMAKE_VHDL_COMPILER} -e -v "${ENTITY_NAME}"    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        add_custom_target("${TEST_NAME}" COMMAND ${CMAKE_VHDL_COMPILER} -r -v ${ENTITY_NAME}  --stop-time=1000ns --vcd=${TRACE_VCD_PATH} --fst=${TRACE_FST_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${ARGV1}")
 
-	add_custom_target("sim_${ARGV1}" COMMAND ${VCD_VIEWER_COMMAND} ${TRACE_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${TEST_NAME}")
+	add_custom_target("sim_${ARGV1}" COMMAND ${VCD_VIEWER_COMMAND} ${TRACE_VCD_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${TEST_NAME}")
         
-        add_test(NAME "${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER}  -r "${ENTITY_NAME}" --assert-level=error WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        add_test(NAME "${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER}  -r -v "${ENTITY_NAME}" --assert-level=error WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
         list (APPEND VHDL_TEST_MODULE "${ARGV1}")
 
         add_dependencies(runtest "${ARGV1}")
