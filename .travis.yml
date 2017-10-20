@@ -6,4 +6,4 @@ before_install:
 - docker info
 - docker build -t mariobarbareschi/vhdl_ci .
 script:
-- travis_wait docker run mariobarbareschi/vhdl_ci /bin/bash -c "mkdir /opt/build && cd /opt/build && cmake .. && make all test"
+- travis_wait 30 docker run mariobarbareschi/vhdl_ci /bin/bash -c "mkdir /opt/build && cd /opt/build && cmake .. && make all test"
