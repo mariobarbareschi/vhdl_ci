@@ -1,4 +1,4 @@
-[![](https://images.microbadger.com/badges/image/mariobarbareschi/vhdl_ci.svg)](https://microbadger.com/images/mariobarbareschi/vhdl_ci "Get your own image badge on microbadger.com")[![Build Status](https://travis-ci.org/mariobarbareschi/vhdl_ci.svg?branch=master)](https://travis-ci.org/mariobarbareschi/vhdl_ci)
+[![](https://images.microbadger.com/badges/image/mariobarbareschi/vhdl_ci.svg)](https://microbadger.com/images/mariobarbareschi/vhdl_ci "Get your own image badge on microbadger.com")[![Build Status](https://travis-ci.org/mariobarbareschi/vhdl_ci.svg?branch=sfblc)](https://travis-ci.org/mariobarbareschi/vhdl_ci)
 # vhdl_ci
 This repository contains a minimal configuration for getting started with the Continuous Integration for the VHDL language, by involving the [GHDL] compiler.
 
