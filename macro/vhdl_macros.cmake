@@ -67,19 +67,18 @@ macro (add_testbench_source)
 
         string(REGEX REPLACE ".vhd" "" TEST_NAME "${FILE_SRC}")
         string(REGEX REPLACE "/" "." TEST_NAME "${TEST_NAME}")
-        string(REGEX REPLACE ".vhd" "" ENTITY_NAME "${_src}")
         set(TRACE_PATH "${CMAKE_BINARY_DIR}/trace")
         file(MAKE_DIRECTORY ${TRACE_PATH})
         set(TRACE_VCD_PATH "${TRACE_PATH}/${TEST_NAME}.vcd")
         set(TRACE_FST_PATH "${TRACE_PATH}/${TEST_NAME}.fst")
 
         add_custom_target("${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER} -a -v "${CMAKE_SOURCE_DIR}/${FILE_SRC}" &&
-                                                 ${CMAKE_VHDL_COMPILER} -e -v "${ENTITY_NAME}"    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-        add_custom_target("${TEST_NAME}" COMMAND ${CMAKE_VHDL_COMPILER} -r -v ${ENTITY_NAME}  --stop-time=1000ns --vcd=${TRACE_VCD_PATH} --fst=${TRACE_FST_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${ARGV1}")
+                                                 ${CMAKE_VHDL_COMPILER} -e -v "${ARGV1}" WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        add_custom_target("${TEST_NAME}" COMMAND ${CMAKE_VHDL_COMPILER} -r -v ${ARGV1}  --stop-time=1000ns --vcd=${TRACE_VCD_PATH} --fst=${TRACE_FST_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${ARGV1}")
 
 	add_custom_target("sim_${ARGV1}" COMMAND ${VCD_VIEWER_COMMAND} ${TRACE_VCD_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} DEPENDS "${TEST_NAME}")
         
-        add_test(NAME "${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER}  -r -v "${ENTITY_NAME}" --assert-level=error WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        add_test(NAME "${ARGV1}" COMMAND ${CMAKE_VHDL_COMPILER}  -r -v "${ARGV1}" --assert-level=error WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
         list (APPEND VHDL_TEST_MODULE "${ARGV1}")
 
         add_dependencies(runtest "${ARGV1}")
@@ -88,4 +87,3 @@ macro (add_testbench_source)
     endforeach()
     set (VHDL_TEST_MODULE ${VHDL_TEST_MODULE}  CACHE INTERNAL "" FORCE)
 endmacro()
-
