@@ -25,7 +25,7 @@ Tags are actually used for giving dependencies among entities and testbenches
 add_testbench_source(adder_testbench.vhd test_add)
 add_dependencies(test_add ripple_carry_adder full_adder half_adder)
 ```
-Just make sure that the testbench architecture and the associated tag have the same name, otherwise you will eventually fail your simulation.
+Just make sure that the testbench entity name and the associated tag have the same name, otherwise you will eventually fail your simulation. Moreover, avoid to call it simply *testbench*.
 The effect of add_testbench_source is to add a job for make such that it compiles entities contained inside the VHDL file, while add_testbench_source creates a job for running a test, evaluating assertions inside the testbench, or simulation, by producing in output a VCD file.
 
 ## Running the example
