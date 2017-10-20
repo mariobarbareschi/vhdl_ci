@@ -16,7 +16,7 @@
 #Uncomment and customize the following command whenever gtkwave is not your default command to watch
 #the VCD simulation file.
 
-#set(VCD_VIEWER gtkwave)
+set(VCD_VIEWER open -a gtkwave)
 
 #To make everything working, just add macros specified in the vhdl_macros.cmake file
 include(macro/vhdl_macros.cmake)
@@ -24,7 +24,7 @@ include(macro/vhdl_macros.cmake)
 #Give a name to the project
 #Actually, the language could not be VHDL since there is no a compiler environment for that language
 #Better to say NONE instead of annoying VHDL
-project(ghdl_ci NONE)
+project(xbar_sfblc NONE)
 
 #This project requires at least cmake 3.3
 cmake_minimum_required(VERSION 3.3)

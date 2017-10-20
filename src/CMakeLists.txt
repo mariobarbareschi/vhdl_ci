@@ -13,5 +13,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(mux2_1)
-add_subdirectory(mux4_1)
+add_subdirectory(controller)
+add_subdirectory(crossbar)
+add_subdirectory(memristor_model)
+
+add_vhdl_source(scf_XBG.vhd top_module)
+add_dependencies(top_module controller)
