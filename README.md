@@ -16,9 +16,9 @@ Clearly, your VHDL project is made of entities, packages, functions, testbenches
 
 | CMake Macros | Description |
 | ------ | ------ |
-| add_vhdl_source(<file> <entity_tag>) | add <file> with the symbolic name <entity_tag>|
-| add_testbench_source(<file> <test_tag>) | add testbench <file> with the symbolic name <test_tag> |
+| add_vhdl_source(<file> <entity_tag>) | add <file> with the symbolic name <entity_tag> into the library *work*|
 | add_vhdl_library(<file> <library_name> <entity_tag>) | add <file> with the symbolic name <entity_tag> into the library <library_name> |
+| add_testbench_source(<file> <test_tag>) | add testbench <file> with the symbolic name <test_tag> |
 
 Tags are actually used for giving dependencies among entities and testbenches
 ```cmake
